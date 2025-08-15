@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Callback MercadoLivre - Autenticação</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+        .warning { color: #ffc107; }
+        .code-box {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: monospace;
+            word-break: break-all;
+        }
+        .copy-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .copy-btn:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Autenticação MercadoLivre</h1>
+        <p id="status">Processando...</p>
+        <div id="code-container" style="display: none;">
+            <h3>Código de Autorização:</h3>
+            <div class="code-box" id="auth-code"></div>
+            <button class="copy-btn" onclick="copyCode()">📋 Copiar Código</button>
+            <p><strong>Instruções:</strong></p>
+            <ol>
+                <li>Copie o código acima</li>
+                <li>Cole no seu aplicativo Python</li>
+                <li>Execute o processo de troca por token de acesso</li>
+            </ol>
+        </div>
+    </div>
+    
+    <script>
+        // Captura parâmetros da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        const error = urlParams.get('error');
+        const state = urlParams.get('state');
+        
+        function copyCode() {
+            const codeText = document.getElementById('auth-code').textContent;
+            navigator.clipboard.writeText(codeText).then(() => {
+                alert('Código copiado para a área de transferência!');
+            });
+        }
+        
+        if (error) {
+            document.getElementById('status').innerHTML = 
+                `<span class="error">❌ Erro na autenticação: ${error}</span>
+                <p>Tente novamente ou verifique as configurações da sua aplicação.</p>`;
+        } else if (code) {
+            document.getElementById('status').innerHTML = 
+                '<span class="success">✅ Autenticação realizada com sucesso!</span>';
+            document.getElementById('code-container').style.display = 'block';
+            document.getElementById('auth-code').textContent = code;
+        } else {
+            document.getElementById('status').innerHTML = 
+                '<span class="warning">⚠️ Nenhum código de autorização encontrado na URL.</span>';
+        }
+        
+        // Log para debug
+        console.log('URL Params:', {
+            code: code,
+            error: error,
+            state: state,
+            fullURL: window.location.href
+        });
+    </script>
+</body>
+</html>
