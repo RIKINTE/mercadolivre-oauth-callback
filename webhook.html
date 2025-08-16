@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webhook MercadoLivre - Notificações</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .notification {
+            background: #e7f3ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .log-entry {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔔 Webhook MercadoLivre</h1>
+        <div class="notification">
+            <h3>ℹ️ Informação</h3>
+            <p>Esta página recebe notificações do MercadoLivre via webhook.</p>
+            <p><strong>Status:</strong> Ativo e funcionando</p>
+            <p><strong>Última atualização:</strong> <span id="timestamp"></span></p>
+        </div>
+        
+        <h3>📋 Log de Notificações:</h3>
+        <div id="webhook-logs">
+            <div class="log-entry">
+                <strong>Sistema iniciado:</strong> Aguardando notificações do MercadoLivre...
+            </div>
+        </div>
+        
+        <h3>🔧 Configuração:</h3>
+        <p>Use esta URL no painel do MercadoLivre:</p>
+        <code>https://rikinte.github.io/mercadolivre-oauth-callback/webhook.html</code>
+    </div>
+    
+    <script>
+        // Atualiza timestamp
+        document.getElementById('timestamp').textContent = new Date().toLocaleString('pt-BR');
+        
+        // Simula recebimento de webhook (para demonstração)
+        function logWebhook(data) {
+            const logsDiv = document.getElementById('webhook-logs');
+            const logEntry = document.createElement('div');
+            logEntry.className = 'log-entry';
+            logEntry.innerHTML = `
+                <strong>${new Date().toLocaleString('pt-BR')}:</strong> 
+                Notificação recebida - ${JSON.stringify(data)}
+            `;
+            logsDiv.appendChild(logEntry);
+        }
+        
+        // Captura parâmetros da URL (caso o MercadoLivre envie via GET)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.toString()) {
+            logWebhook(Object.fromEntries(urlParams));
+        }
+        
+        // Log inicial
+        console.log('Webhook endpoint ativo:', window.location.href);
+    </script>
+</body>
+</html>
